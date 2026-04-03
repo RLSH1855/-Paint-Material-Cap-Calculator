@@ -968,6 +968,8 @@ function setRecords(arr) {
     localStorage.setItem(RECORDS_KEY, JSON.stringify(arr));
 }
 
+var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyaKneCiepQd26tADtXiJ3CLtho1HKdS2C2ajMKZvfStGUNVKxRq-bnzZGJb3CBMf2p/exec';
+
 function saveRecord() {
     var ro   = document.getElementById('infoRO').value.trim();
     if (!ro) { showToast('Enter an RO# before saving.'); return; }
@@ -991,11 +993,26 @@ function saveRecord() {
         netDue:       document.getElementById('totNet').textContent
     };
 
+    // Save to localStorage
     var arr = getRecords();
     arr.unshift(rec);
     setRecords(arr);
     renderRecords();
-    showToast('Record saved — RO# ' + ro);
+
+    // Save to Google Sheets
+    fetch(SHEETS_URL, {
+        method: 'POST',
+        body: JSON.stringify(rec)
+    }).then(function(res) { return res.json(); })
+      .then(function(data) {
+          if (data.status === 'ok') {
+              showToast('Record saved — RO# ' + ro);
+          } else {
+              showToast('Saved locally. Sheets error: ' + data.message);
+          }
+      }).catch(function() {
+          showToast('Saved locally. Could not reach Google Sheets.');
+      });
 }
 
 function loadRecord(id) {
