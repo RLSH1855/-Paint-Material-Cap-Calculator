@@ -1165,7 +1165,7 @@
 
     /* ══════════════════════════════════════
        DATA — LINE ITEMS
-       Formula: amount = hours * rate * G * 0.999 * (1 ± pct/100)
+       Formula: amount = hours * rate * G * 0.999 * (1 +/- pct/100)
        G values sum to exactly 1.000
     ══════════════════════════════════════ */
     var LINE_ITEMS = [
@@ -1720,12 +1720,12 @@
 
             saveUnitPrices();
             status.style.color = '#2ecc71';
-            status.textContent = '✓ Imported RO# ' + roNum + ' — ' + rows.length + ' mix(es), ' + updated + ' line item(s) updated with scale data.';
+            status.textContent = '\u2713 Imported RO# ' + roNum + ' - ' + rows.length + ' mix(es), ' + updated + ' line item(s) updated with scale data.';
 
             document.getElementById('refinityFile').value = '';
         };
 
-        reader.onerror = function() { status.textContent = '⚠ Could not read file.'; };
+        reader.onerror = function() { status.textContent = '\u26a0 Could not read file.'; };
         reader.readAsText(file);
     }
 
